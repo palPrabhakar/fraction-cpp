@@ -22,6 +22,9 @@ public:
 
   friend std::ostream &operator<<(std::ostream &, Fraction const &);
 
+  int numerator() { return n; }
+  int denominator() { return d; }
+
 private:
   int n, d;
 };
