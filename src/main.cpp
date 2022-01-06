@@ -26,51 +26,85 @@ TEST_CASE("Init Fractions", "[fractions]") {
     CHECK(((f7.numerator() == 0) && (f7.denominator() == 1)));
   }
 
+  SECTION("Test Equality") {
+    REQUIRE_FALSE(f1 == f2);
+    REQUIRE(f1 != f2);
+
+    REQUIRE(f1 == Fraction(4, 8));
+    REQUIRE_FALSE(f1 != Fraction(4, 8));
+
+    REQUIRE_FALSE(f4 == f7);
+    REQUIRE(f4 != f7);
+
+    REQUIRE(f3 == Fraction(3, 9));
+    REQUIRE_FALSE(f3 != Fraction(3, 9));
+
+    REQUIRE(f5 == Fraction(-3, 4));
+    REQUIRE_FALSE(f5 != Fraction(-3, 4));
+
+    REQUIRE(f5 == f5);
+    REQUIRE_FALSE(f5 != f5);
+  }
+
   SECTION("Test Addition") {
-    Fraction fa12 = f1 + f2;
-    CHECK(((fa12.numerator() == 13) && (fa12.denominator() == 14)));
-
-    Fraction fa13 = f1 + f3;
-    CHECK(((fa13.numerator() == 5) && (fa13.denominator() == 6)));
-
-    Fraction fa14 = f1 + f4;
-    CHECK(((fa14.numerator() == 17) && (fa14.denominator() == 14)));
-
-    Fraction fa25 = f2 + f5;
-    CHECK(((fa25.numerator() == -9) && (fa25.denominator() == 28)));
-
-    Fraction fa26 = f2 + f6;
-    CHECK(((fa26.numerator() == 1) && (fa26.denominator() == 35)));
-
-    Fraction fa37 = f3 + f7;
-    CHECK(((fa37.numerator() == f3.numerator()) &&
-           (fa37.denominator() == f3.denominator())));
-
-    Fraction fa56 = f5 + f6;
-    CHECK(((fa56.numerator() == -23) && (fa56.denominator() == 20)));
+    CHECK(f1 + f2 == Fraction(13, 14));
+    CHECK(f1 + f3 == Fraction(5, 6));
+    CHECK(f1 + f4 == Fraction(17, 14));
+    CHECK(f2 + f5 == Fraction(-9, 28));
+    CHECK(f2 + f6 == Fraction(1, 35));
+    CHECK(f3 + f7 == f3);
+    CHECK(f5 + f6 == Fraction(-23, 20));
   }
 
   SECTION("Test Subtraction") {
-    Fraction fs12 = f1 - f2;
-    CHECK(((fs12.numerator() == 1) && (fs12.denominator() == 14)));
+    CHECK(f1 - f2 == Fraction(1, 14));
+    CHECK(f1 - f3 == Fraction(1, 6));
+    CHECK(f1 - f4 == Fraction(-3, 14));
+    CHECK(f2 - f5 == Fraction(33, 28));
+    CHECK(f2 - f6 == Fraction(29, 35));
+    CHECK(f3 - f7 == f3);
+    CHECK(f5 - f6 == Fraction(-7, 20));
+  }
 
-    Fraction fs13 = f1 - f3;
-    CHECK(((fs13.numerator() == 1) && (fs13.denominator() == 6)));
+  SECTION("Test Multiplication") {
+    CHECK(f1 * f2 == Fraction(3, 14));
+    CHECK(f1 * f3 == Fraction(1, 6));
+    CHECK(f1 * f4 == Fraction(5, 14));
+    CHECK(f2 * f5 == Fraction(-9, 28));
+    CHECK(f2 * f6 == Fraction(-6, 35));
+    CHECK(f3 * f7 == f7);
+    CHECK(f5 * f6 == Fraction(3, 10));
+  }
 
-    Fraction fs14 = f1 - f4;
-    CHECK(((fs14.numerator() == -3) && (fs14.denominator() == 14)));
+  SECTION("Test Division") {
+    CHECK(f1 / f2 == Fraction(7, 6));
+    CHECK(f1 / f3 == Fraction(3, 2));
+    CHECK(f1 / f4 == Fraction(7, 10));
+    CHECK(f2 / f5 == Fraction(-4, 7));
+    CHECK(f2 / f6 == Fraction(-15, 14));
+    CHECK_THROWS_AS(f3 / f7, invalid_argument);
+    CHECK(f5 / f6 == Fraction(15, 8));
+  }
 
-    Fraction fs25 = f2 - f5;
-    CHECK(((fs25.numerator() == 33) && (fs25.denominator() == 28)));
+  SECTION("Test Comparison") {
+    CHECK(f1 > f2);
+    CHECK_FALSE(f1 < f2);
+    CHECK(f1 >= f2);
+    CHECK_FALSE(f1 <= f2);
 
-    Fraction fs26 = f2 - f6;
-    CHECK(((fs26.numerator() == 29) && (fs26.denominator() == 35)));
+    CHECK(f2 > f3);
+    CHECK_FALSE(f2 < f3);
+    CHECK(f2 >= f3);
+    CHECK_FALSE(f2 <= f3);
 
-    Fraction fs37 = f3 - f7;
-    CHECK(((fs37.numerator() == f3.numerator()) &&
-           (fs37.denominator() == f3.denominator())));
+    CHECK(f4 > f5);
+    CHECK_FALSE(f4 < f5);
+    CHECK(f4 >= f5);
+    CHECK_FALSE(f4 <= f5);
 
-    Fraction fs56 = f5 - f6;
-    CHECK(((fs56.numerator() == -7) && (fs56.denominator() == 20)));
+    CHECK(f4 > f7);
+    CHECK_FALSE(f4 < f7);
+    CHECK(f4 >= f7);
+    CHECK_FALSE(f4 <= f7);
   }
 }
