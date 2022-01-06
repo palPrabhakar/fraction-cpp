@@ -26,6 +26,40 @@ TEST_CASE("Init Fractions", "[fractions]") {
     CHECK(((f7.numerator() == 0) && (f7.denominator() == 1)));
   }
 
+  SECTION("Test Display") {
+    ostringstream os;
+    os << f1;
+    CHECK(os.str() == "1/2");
+
+    os = ostringstream();
+    os << f2;
+    CHECK(os.str() == "3/7");
+
+    os = ostringstream();
+    os << f3;
+    CHECK(os.str() == "1/3");
+
+    os = ostringstream();
+    os << f4;
+    CHECK(os.str() == "5/7");
+
+    os = ostringstream();
+    os << f5;
+    CHECK(os.str() == "-3/4");
+
+    os = ostringstream();
+    os << f6;
+    CHECK(os.str() == "-2/5");
+
+    os = ostringstream();
+    os << f7;
+    CHECK(os.str() == "0");
+
+    os = ostringstream();
+    os << Fraction(4, 1);
+    CHECK(os.str() == "4");
+  }
+
   SECTION("Test Equality") {
     REQUIRE_FALSE(f1 == f2);
     REQUIRE(f1 != f2);
