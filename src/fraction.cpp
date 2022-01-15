@@ -1,4 +1,5 @@
 #include "fraction.h"
+#include <climits>
 #include <iostream>
 #include <numeric>
 #include <stdexcept>
@@ -27,33 +28,55 @@ Fraction::Fraction(int num, int den) {
   }
 }
 
-std::ostream &operator<<(std::ostream &os, const Fraction &d) {
-  if (d.d == 1)
-    os << d.n;
+std::ostream &operator<<(std::ostream &os, const Fraction &f) {
+  if (f.den() == 1)
+    os << f.num();
   else
-    os << d.n << "/" << d.d;
+    os << f.num() << "/" << f.den();
 
   return os;
 }
 
-Fraction Fraction::operator+(const Fraction &rhs) const {
-  return Fraction(n * rhs.d + d * rhs.n, d * rhs.d);
+Fraction operator+(const Fraction &lhs, const Fraction &rhs) {
+  long long n =
+      (long long)lhs.num() * rhs.den() + (long long)lhs.den() * rhs.num();
+  long long d = (long long)lhs.den() * rhs.den();
+
+  check_operands(n, d);
+
+  return Fraction(n, d);
 }
 
-Fraction Fraction::operator-(const Fraction &rhs) const {
-  return Fraction(n * rhs.d - d * rhs.n, d * rhs.d);
+Fraction operator-(const Fraction &lhs, const Fraction &rhs) {
+  long long n =
+      (long long)lhs.num() * rhs.den() - (long long)lhs.den() * rhs.num();
+  long long d = (long long)lhs.den() * rhs.den();
+
+  check_operands(n, d);
+
+  return Fraction(n, d);
 }
 
-Fraction Fraction::operator*(const Fraction &rhs) const {
-  return Fraction(n * rhs.n, d * rhs.d);
+Fraction operator*(const Fraction &lhs, const Fraction &rhs) {
+  long long n = (long long)lhs.num() * rhs.num();
+  long long d = (long long)lhs.den() * rhs.den();
+
+  check_operands(n, d);
+
+  return Fraction(n, d);
 }
 
-Fraction Fraction::operator/(const Fraction &rhs) const {
-  return Fraction(n * rhs.d, d * rhs.n);
+Fraction operator/(const Fraction &lhs, const Fraction &rhs) {
+  long long n = (long long)lhs.num() * rhs.den();
+  long long d = (long long)lhs.den() * rhs.num();
+
+  check_operands(n, d);
+
+  return Fraction(n, d);
 }
 
 bool operator==(const Fraction &lhs, const Fraction &rhs) {
-  return (lhs.n == rhs.n) && (lhs.d == rhs.d);
+  return (lhs.num() == rhs.num()) && (lhs.den() == rhs.den());
 }
 
 bool operator!=(const Fraction &lhs, const Fraction &rhs) {
@@ -64,7 +87,7 @@ bool operator<(const Fraction &lhs, const Fraction &rhs) {
   Fraction r;
   r = lhs - rhs;
 
-  if (r.n < 0)
+  if (r.num() < 0)
     return true;
   else
     return false;
@@ -78,4 +101,24 @@ bool operator<=(const Fraction &lhs, const Fraction &rhs) {
 
 bool operator>=(const Fraction &lhs, const Fraction &rhs) {
   return !(lhs < rhs);
+}
+
+void check_operands(long long &n, long long &d) {
+  if (check_overflow(n) || check_overflow(d)) {
+    long long div = std::gcd(n, d);
+    if (check_overflow(n / div) || check_overflow(d / div)) {
+      throw std::runtime_error(
+          "Operation leads to either overflow or underlow");
+    } else {
+      n /= div;
+      d /= div;
+    }
+  }
+}
+
+bool check_overflow(long long value) {
+  if (value < INT_MIN || value > INT_MAX)
+    return true;
+
+  return false;
 }
